@@ -114,10 +114,10 @@ The Order Of Exection Is
 
 ```
 - call_1
-    + Then the problem waits for result1
+    + Then the program waits for result1
 - call_2
-    + Then the problem waits for result2
+    + Then the program waits for result2
 - call_3
-    + Then the problem waits for result3
+    + Then the program waits for result3
 - Then final_result is printed.
 ```
