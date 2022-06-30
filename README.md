@@ -1,4 +1,6 @@
-[AJAX Async Await](#ajax-async-await)
+[AJAX Async Await V1](#ajax-async-await-v1)
+
+[AJAX Async Await V2](#ajax-async-await-v2)
 
 [Web Worker](#web-worker)
 
@@ -10,7 +12,7 @@
 
 <hr/>
 
-#### [AJAX Async Await](#ajax-async-await)
+#### [AJAX Async Await V1](#ajax-async-await-v1)
 
 > In Chrome Debugger, Insert These Lines To Include jQuery Library
 
@@ -74,6 +76,153 @@ try {
 } catch(e){
     console.log(e);
 }
+```
+
+#### [AJAX Async Await V2](#ajax-async-await-v2)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generic HTML5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-2021.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-2020.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-win8.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <style type="text/css">
+    body, h1, h2, h3, h4, h5, table {
+        font-family: Roboto, Helvetica,sans-serif !important;
+    }
+    .main-body {
+        margin-top: 10px;
+        margin-botton: 10px;
+    }
+    </style>
+
+    <!-- 
+    <script type="text/javascript">
+        var ajax_time_out = 60000; // 60 secs
+        var json_data = {};
+    </script>
+    -->
+
+</head>
+
+<body class="main-body">
+
+    <div class="w3-container">
+        <button id="id_btn_pull_data" class="w3-button w3-blue w3-round">Pull Data</button>
+    </div>
+
+    <br/>
+
+    <div class="w3-container">
+        <div id="results"></div>
+    </div>
+
+    <br/>
+
+    <div class="w3-container">
+        <button id="id_btn_pull_data_v2" class="w3-button w3-blue w3-round">Pull Data Which Takes Time</button>
+    </div>
+
+    <br/>
+
+
+    <div class="w3-container">
+        <div id="results_v2"></div>
+    </div>
+
+    <br/>
+
+</body>
+</html>
+
+<script>
+window.addEventListener('DOMContentLoaded', (event) => {
+    
+});
+</script>
+
+<script>
+
+async function make_ajax_call() {
+    try {
+        let resp = await asyncAjax("https://api.agify.io/?name=bella");
+        $("#results").html(JSON.stringify(resp));
+    } catch(e){
+        console.log(err);
+        $("#results").html(err);
+    }
+}
+
+async function make_ajax_call_which_takes_time() {
+    try {
+        // below URL takes 6 seconds to respond
+        let resp = await asyncAjax("http://localhost:5000/api/v1/test");
+        $("#results_v2").html(JSON.stringify(resp));
+    } catch(e){
+        console.log(err);
+        $("#results_v2").html(err);
+    }
+}
+
+
+async function asyncAjax(my_url){
+    var ajax_time_out = 60000; // 60 seconds timeout;
+
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            timeout: ajax_time_out,
+            url: my_url,
+            data: JSON.stringify({ "data": "hello_world" }),
+            beforeSend: function() {            
+                // add loader
+                console.log("beforeSend ...");
+            },
+            complete: function() {
+                // remove loader
+                console.log("complete ...");
+            },
+            success: function(data) {
+                console.log("success : url : (" + my_url + ")");
+                // console.log(data);
+                var json_data = {};
+                // json_data = JSON.parse(data);
+                json_data = data;
+
+                console.log(json_data);
+
+                /*
+                $("#results").html(JSON.stringify(json_data));
+                */
+                resolve(json_data); // Resolve promise and when success
+            },
+            error: function(data) {
+                console.log("error : url : (" + my_url + ")");
+                console.log(data);
+                reject(err) // Reject the promise and go to catch()
+            },
+        }); // $.ajax({
+    });
+}
+
+$("#id_btn_pull_data").click(function(){
+    make_ajax_call();
+});
+
+$("#id_btn_pull_data_v2").click(function(){
+    make_ajax_call_which_takes_time();
+});
+
+</script>
 ```
 
 #### [Web Worker](#web-worker)
