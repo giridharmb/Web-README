@@ -1,3 +1,5 @@
+[AJAX Async Await](#ajax-async-await)
+
 [Web Worker](#web-worker)
 
 [Async Await And Promise](#async-await-and-promise)
@@ -7,6 +9,72 @@
 [Generic HTML Template](#generic-html-template)
 
 <hr/>
+
+#### [AJAX Async Await](#ajax-async-await)
+
+> In Chrome Debugger, Insert These Lines To Include jQuery Library
+
+```javascript
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+document.head.appendChild(script);
+```
+
+> Async Await For AJAX GET Request
+
+```javascript
+function asyncAjax(my_url){
+    var ajax_time_out = 60000; // 60 seconds timeout;
+
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            timeout: ajax_time_out,
+            url: my_url,
+            data: JSON.stringify({ "data": "hello_world" }),
+            beforeSend: function() {            
+                // add loader
+            },
+            complete: function() {
+                // remove loader
+            },
+            success: function(data) {
+                console.log("success : url : (" + my_url + ")");
+                // console.log(data);
+                var json_data = {};
+                // json_data = JSON.parse(data);
+                json_data = data;
+
+                if(!json_data.hasOwnProperty("name")) {
+                    console.log("JSON does not have key 'name' !");
+                    reject(err) // Reject the promise and go to catch()
+                }
+
+                console.log(json_data);
+
+                /*
+                $("#results").html(JSON.stringify(json_data));
+                */
+                resolve(json_data); // Resolve promise and when success
+            },
+            error: function(data) {
+                console.log("error : url : (" + my_url + ")");
+                console.log(data);
+                reject(err) // Reject the promise and go to catch()
+            },
+        }); // $.ajax({
+    });
+}
+
+try {
+    let resp = await asyncAjax("https://api.agify.io/?name=bella");
+} catch(e){
+    console.log(e);
+}
+```
 
 #### [Web Worker](#web-worker)
 
